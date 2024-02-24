@@ -4,24 +4,23 @@ internal class RigidObject : SolidObject
 {
     public Velocity Velocity { get; } = new Velocity(); // body velocity
 
-    public float Gravity = 0.8f; // gravity force applied to the object
-    public float AirDrag = 0.1f; // air drag force applied to the object
+    public float Gravity = 1.3f; // gravity force applied to the object
+    public float AirDrag = 0.2f; // air drag force applied to the object
 
     public bool Colliding = false; // is the object colliding with anything?
     public bool Grounded = false; // is the object grounded?
 
     public override void Update(Game game)
     {
-        // apply gravity to main velocity
-        Velocity.Main = new Vector2f(Velocity.Main.X, Velocity.Main.Y + Gravity);
+        Velocity.Main = new Vector2f(Velocity.Main.X, Velocity.Main.Y + Gravity); // apply gravity to main velocity
 
-        //apply air drag to velocities
-        foreach (string key in Velocity.Keys)
+        foreach (string key in Velocity.Keys) // apply air drag to velocities
             Velocity[key] /= 1 + AirDrag;
 
-        // apply velocities to position
-        foreach (Vector2f _vel in Velocity.Values)
+        foreach (Vector2f _vel in Velocity.Values) // apply velocities to position
             Position += _vel;
+
+        bool hasCollided = false; // if the object has collided with anything
 
         // check if the player is colliding with anything
         foreach (RawObject obj in Game.Instance.Level.children)
@@ -35,8 +34,6 @@ internal class RigidObject : SolidObject
 
             if (Bounds.ResolveCollision(solid.Bounds, out bool xAxis))
             {
-                Colliding = true;
-
                 Vector2f m_Velocity = Velocity.Main;
 
                 if (xAxis)
@@ -48,12 +45,12 @@ internal class RigidObject : SolidObject
                 }
 
                 Velocity.Main = m_Velocity;
-            }
-            else
-            {
-                Colliding = false;
-                Grounded = false;
+
+                hasCollided = true;
             }
         }
+
+        Colliding = hasCollided; // set the colliding state
+        Grounded = hasCollided ? Grounded : hasCollided; // set the grounded state (if not colliding we set to false to avoid air jumps)
     }
 }

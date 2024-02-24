@@ -15,8 +15,6 @@ internal class Game : GameEngine
         // set the window title
         Title = "HellEngine";
 
-        // set the window size
-
         // simple objects to border the edges of the window off
         Instance.Level.children.Add(new SolidObject()
         {
@@ -47,12 +45,18 @@ internal class Game : GameEngine
         });
 
         // some test rigid objects
-        Instance.Level.children.Add(new RigidObject()
+        for (int x = 0; x < 30; x++)
         {
-            Position = new Vector2f(200, 200),
-            Size = new Vector2f(50, 20),
-            Color = Color.Blue,
-        });
+            for (int y = 0; y < 30; y++)
+            {
+                Instance.Level.children.Add(new RigidObject()
+                {
+                    Position = new Vector2f(100 + (x * 4), 400 - (y * 4)),
+                    Size = new Vector2f(4, 4),
+                    Color = Color.Blue,
+                });
+            }
+        }
 
         Size = new Vector2u(800, 600);
 
@@ -63,7 +67,7 @@ internal class Game : GameEngine
     public Game()
     {
         // some debugging information
-        Instance.Level.children.Add(Instance.DebugText);
+        //Instance.Level.children.Add(Instance.DebugText);
 
         // add the player to the level
         Instance.Level.children.Add(Instance.Player);
@@ -77,14 +81,14 @@ internal class Game : GameEngine
         Instance.Level.Update(this); // update game logic
 
         // update the debug text
-        Instance.SetDebugText(new string[] {
-            //"FPS: " + (1 / DeltaTime).ToString("0"),
-            "Player Position: " + Instance.Player.Position.ToString(),
-            "Player Size: " + Instance.Player.Size.ToString(),
-            "Player Rotation: " + Instance.Player.Rotation.ToString(),
-            "Player Velocity: " + Instance.Player.Velocity.Main.ToString(),
-            "Player Movement: " + Instance.Player.Velocity["movement"].ToString(),
-        });
+        //Instance.SetDebugText(new string[] {
+        //    //"FPS: " + (1 / DeltaTime).ToString("0"),
+        //    "Player Position: " + Instance.Player.Position.ToString(),
+        //    "Player Size: " + Instance.Player.Size.ToString(),
+        //    "Player Rotation: " + Instance.Player.Rotation.ToString(),
+        //    "Player Velocity: " + Instance.Player.Velocity.Main.ToString(),
+        //    "Player Movement: " + Instance.Player.Velocity["movement"].ToString(),
+        //});
     }
 
     protected override void OnDraw(RenderWindow ctx)

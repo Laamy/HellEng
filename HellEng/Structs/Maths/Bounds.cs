@@ -10,6 +10,8 @@ class Bounds
     private Transformable _transformable; // transformable object
     private RectangleShape _rect; // rectangle shape
 
+    private FloatRect? _cache; // cached bounds to avoid recalculating when not needed
+
     public Bounds(FloatRect rect)
     {
         // store the original bounds
@@ -22,6 +24,8 @@ class Bounds
 
         // get the bounds of the transformable object
         FloatRect bounds = GetGlobalBounds();
+
+        _cache = bounds;
 
         // create a rectangle shape
         _rect = new RectangleShape(new Vector2f(bounds.Width, bounds.Height));
@@ -36,7 +40,11 @@ class Bounds
     public Vector2f Position
     {
         get => _transformable.Position;
-        set => _transformable.Position = value;
+        set
+        {
+            _transformable.Position = value;
+            _cache = null; // clear the cache to force recalculation
+        }
     }
 
     public Vector2f Size
@@ -46,6 +54,7 @@ class Bounds
         {
             _original.Width = value.X;
             _original.Height = value.Y;
+            _cache = null; // clear the cache to force recalculation
         }
     }
 
@@ -56,10 +65,35 @@ class Bounds
     }
 
     public FloatRect GetGlobalBounds()
-        => _transformable.Transform.TransformRect(_original);
+    {
+        if (_cache == null)
+        {
+            FloatRect bounds = _transformable.Transform.TransformRect(_original);
+            _cache = bounds;
+            return bounds;
+        }
+        else return (FloatRect)_cache;
+    }
 
     public bool Intersects(Bounds other)
-        => GetGlobalBounds().Intersects(other.GetGlobalBounds());
+    {
+        FloatRect thisBounds = GetGlobalBounds();
+        FloatRect otherBounds = other.GetGlobalBounds();
+
+        // the FloatRect.Intersects method is not fast enough for our needs
+        // so we've setup some custom code to do the same thing but a bit faster
+        // btw we dont use math.max and .min cuz they have extra checks and it goes off into other memory
+        // which takes time to access and slows down the process
+
+        // Compute the intersection boundaries
+        float interLeft = (thisBounds.Left > otherBounds.Left) ? thisBounds.Left : otherBounds.Left;
+        float interTop = (thisBounds.Top > otherBounds.Top) ? thisBounds.Top : otherBounds.Top;
+        float interRight = (thisBounds.Left + thisBounds.Width < otherBounds.Left + otherBounds.Width) ? thisBounds.Left + thisBounds.Width : otherBounds.Left + otherBounds.Width;
+        float interBottom = (thisBounds.Top + thisBounds.Height < otherBounds.Top + otherBounds.Height) ? thisBounds.Top + thisBounds.Height : otherBounds.Top + otherBounds.Height;
+
+        // If the intersection is valid (positive non-zero area), then there is an intersection
+        return interLeft < interRight && interTop < interBottom;
+    }
 
     public bool ResolveCollision(Bounds other)
         => ResolveCollision(other, out _);
