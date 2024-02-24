@@ -16,10 +16,6 @@ internal class Game : GameEngine
         Title = "HellEngine";
 
         // set the window size
-        Size = new Vector2u(800, 600);
-
-        // add the debug menu to the scene
-        Instance.Level.children.Add(Instance.DebugMenu);
 
         // simple objects to border the edges of the window off
         Instance.Level.children.Add(new SolidObject()
@@ -57,6 +53,11 @@ internal class Game : GameEngine
             Size = new Vector2f(50, 20),
             Color = Color.Blue,
         });
+
+        Size = new Vector2u(800, 600);
+
+        // add the debug menu to the scene
+        Instance.Level.children.Add(Instance.DebugMenu);
     }
 
     public Game()
