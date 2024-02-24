@@ -7,6 +7,7 @@ internal class ClientInstance
     public Level Level = new Level();
     public FontRepository FontRepos = new FontRepository();
     public LocalPlayer Player = new LocalPlayer();
+    public DebugMenu DebugMenu = new DebugMenu();
     public SolidText DebugText = new SolidText()
     {
         Position = new Vector2f(10, 10),

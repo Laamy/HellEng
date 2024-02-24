@@ -21,7 +21,7 @@ internal class GameEngine
     private int updateRate = 60;
 
     // sdl stuff
-    private RenderWindow window;
+    public RenderWindow window;
 
     // check if sdl window is in focus
     public bool IsFocused

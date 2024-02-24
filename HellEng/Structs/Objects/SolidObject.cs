@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 #endregion
 
-internal class SolidObject : Object
+internal class SolidObject : RawObject
 {
     public SolidObject()
     {

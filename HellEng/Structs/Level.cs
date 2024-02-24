@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 internal class Level
 {
-    public List<Object> children = new List<Object>();
+    public List<RawObject> children = new List<RawObject>();
 
     public void Draw(RenderWindow e)
     {
         // loop over the scene and draw u fuckign retard
-        foreach (Object child in children)
+        foreach (RawObject child in children)
         {
             child.Draw(e);
         }
@@ -21,7 +21,7 @@ internal class Level
     public void Update(Game game)
     {
         // loop over the scene and update
-        foreach (Object child in children)
+        foreach (RawObject child in children)
         {
             child.Update(game);
         }

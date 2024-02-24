@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 
-internal class SolidText : Object
+internal class SolidText : RawObject
 {
     public Vector2f Position { get; set; }
     public uint Size { get; set; }

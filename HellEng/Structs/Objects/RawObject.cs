@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 #endregion
 
-internal class Object
+internal class RawObject
 {
     public virtual void Draw(RenderWindow e) { }
     public virtual void Update(Game game) { } // updates at a constant 60fps

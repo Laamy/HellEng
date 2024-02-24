@@ -17,6 +17,46 @@ internal class Game : GameEngine
 
         // set the window size
         Size = new Vector2u(800, 600);
+
+        // add the debug menu to the scene
+        Instance.Level.children.Add(Instance.DebugMenu);
+
+        // simple objects to border the edges of the window off
+        Instance.Level.children.Add(new SolidObject()
+        {
+            Position = new Vector2f(0, 0),
+            Size = new Vector2f(Size.X, 10),
+            Color = Color.White,
+        });
+
+        Instance.Level.children.Add(new SolidObject()
+        {
+            Position = new Vector2f(0, 0),
+            Size = new Vector2f(10, Size.Y),
+            Color = Color.White,
+        });
+
+        Instance.Level.children.Add(new SolidObject()
+        {
+            Position = new Vector2f(Size.X - 10, 0),
+            Size = new Vector2f(10, Size.Y),
+            Color = Color.White,
+        });
+
+        Instance.Level.children.Add(new SolidObject()
+        {
+            Position = new Vector2f(0, Size.Y - 10),
+            Size = new Vector2f(Size.X, 10),
+            Color = Color.White,
+        });
+
+        // some test rigid objects
+        Instance.Level.children.Add(new RigidObject()
+        {
+            Position = new Vector2f(200, 200),
+            Size = new Vector2f(50, 20),
+            Color = Color.Blue,
+        });
     }
 
     public Game()
@@ -26,14 +66,6 @@ internal class Game : GameEngine
 
         // add the player to the level
         Instance.Level.children.Add(Instance.Player);
-
-        // simple floor for the level
-        Instance.Level.children.Add(new SolidObject()
-        {
-            Position = new Vector2f(0, 500),
-            Size = new Vector2f(800, 20),
-            Color = Color.White,
-        });
 
         // we've finished so start the app
         Start();
@@ -47,6 +79,10 @@ internal class Game : GameEngine
         Instance.SetDebugText(new string[] {
             //"FPS: " + (1 / DeltaTime).ToString("0"),
             "Player Position: " + Instance.Player.Position.ToString(),
+            "Player Size: " + Instance.Player.Size.ToString(),
+            "Player Rotation: " + Instance.Player.Rotation.ToString(),
+            "Player Velocity: " + Instance.Player.Velocity.Main.ToString(),
+            "Player Movement: " + Instance.Player.Velocity["movement"].ToString(),
         });
     }
 
