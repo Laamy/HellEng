@@ -62,6 +62,34 @@ internal class Game : GameEngine
 
         ocean.AddClippingArea(new Vector2f(100, 100), new Vector2f(100, 100));
 
+        {
+            // we've created an air bubble in the water so lets give it some borders of solidObjects
+            Instance.Level.Children.Add(new SolidObject()
+            {
+                Position = ocean.Position + new Vector2f(100, 100),
+                Size = new Vector2f(100, 10),
+                Color = Color.White,
+            });
+            Instance.Level.Children.Add(new SolidObject()
+            {
+                Position = ocean.Position + new Vector2f(100, 100),
+                Size = new Vector2f(10, 100),
+                Color = Color.White,
+            });
+            Instance.Level.Children.Add(new SolidObject()
+            {
+                Position = ocean.Position + new Vector2f(190, 100),
+                Size = new Vector2f(10, 100),
+                Color = Color.White,
+            });
+            Instance.Level.Children.Add(new SolidObject()
+            {
+                Position = ocean.Position + new Vector2f(100, 195),
+                Size = new Vector2f(50, 5),
+                Color = Color.White,
+            });
+        }
+
         ocean.Invalidate();
 
         // cover the boittom half of map as WaterObject
