@@ -18,7 +18,33 @@ internal class RigidObject : SolidObject
         bool hasCollided = false; // if the object has collided with anything
         bool inLiquid = false; // if the object is in water
 
-        // check if the player is colliding with anything
+        // check if the player is colliding with anything (excluding water as we need to seperately check before we apply friction)
+        foreach (RawObject obj in Game.Instance.Level.Children)
+        {
+            if (obj is LiquidObject)
+            {
+                if (obj == null) continue; // skip if null
+
+                LiquidObject liquid = (LiquidObject)obj;
+
+                if (Bounds.ResolveCollision(liquid.Bounds, out bool xAxis, false))
+                {
+                    inLiquid = true;
+                    Grounded = true;
+                    hasCollided = true;
+
+                    foreach (string key in Velocity.Keys)
+                        Velocity[key] /= 1 + liquid.Friction;
+                }
+            }
+        }
+
+        foreach (string key in Velocity.Keys) // apply air drag to velocities
+            Velocity[key] /= 1 + AirFriction;
+
+        foreach (Vector2f _vel in Velocity.Values) // apply velocities to position
+            Position += _vel;
+
         foreach (RawObject obj in Game.Instance.Level.Children)
         {
             if (obj is SolidObject)
@@ -46,30 +72,7 @@ internal class RigidObject : SolidObject
                     hasCollided = true;
                 }
             }
-
-            if (obj is LiquidObject)
-            {
-                if (obj == null) continue; // skip if null
-
-                LiquidObject liquid = (LiquidObject)obj;
-
-                if (Bounds.ResolveCollision(liquid.Bounds, out bool xAxis, false))
-                {
-                    inLiquid = true; 
-                    Grounded = true;
-                    hasCollided = true;
-
-                    foreach (string key in Velocity.Keys)
-                        Velocity[key] /= 1 + liquid.Friction;
-                }
-            }
         }
-
-        foreach (string key in Velocity.Keys) // apply air drag to velocities
-            Velocity[key] /= 1 + AirFriction;
-
-        foreach (Vector2f _vel in Velocity.Values) // apply velocities to position
-            Position += _vel;
 
         InWater = inLiquid; // set the in water state
         Colliding = hasCollided; // set the colliding state
