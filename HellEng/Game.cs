@@ -2,6 +2,7 @@
 
 using SFML.Graphics;
 using SFML.System;
+using System;
 using System.Diagnostics;
 
 #endregion
@@ -52,13 +53,19 @@ internal class Game : GameEngine
             Color = Color.White,
         });
 
-        // cover the boittom half of map as WaterObject
-        Instance.Level.Children.Add(new LiquidObject()
+        LiquidObject ocean = new LiquidObject()
         {
             Position = new Vector2f(0, Size.Y / 2),
             Size = new Vector2f(Size.X, Size.Y / 2),
             Color = new Color(0, 0, 255, 128),
-        });
+        };
+
+        ocean.AddClippingArea(new Vector2f(100, 100), new Vector2f(100, 100));
+
+        ocean.Invalidate();
+
+        // cover the boittom half of map as WaterObject
+        Instance.Level.Children.Add(ocean);
 
         // some test rigid objects
         //for (int x = 0; x < 8; x++)
@@ -106,6 +113,8 @@ internal class Game : GameEngine
         //    "Player Movement: " + Instance.Player.Velocity["movement"].ToString(),
         //});
     }
+
+    public static Color DarkSkyBlue = new Color(0, 0, 128);
 
     protected override void OnDraw(RenderWindow ctx)
     {

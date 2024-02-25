@@ -6,11 +6,11 @@ using System.Windows.Forms;
 
 class Bounds
 {
-    private FloatRect _original; // original bounds
-    private Transformable _transformable; // transformable object
-    private RectangleShape _rect; // rectangle shape
+    public FloatRect _original; // original bounds
+    public Transformable _transformable; // transformable object
+    public RectangleShape _rect; // rectangle shape
 
-    private FloatRect? _cache; // cached bounds to avoid recalculating when not needed
+    public FloatRect? _cache; // cached bounds to avoid recalculating when not needed
 
     public Bounds(FloatRect rect)
     {
@@ -93,6 +93,17 @@ class Bounds
 
         // If the intersection is valid (positive non-zero area), then there is an intersection
         return interLeft < interRight && interTop < interBottom;
+    }
+
+    public bool IsInside(FloatRect otherBounds)
+    {
+        FloatRect thisBounds = GetGlobalBounds();
+
+        // Check if this rectangle is completely inside the other rectangle (make sure to use condoms!)
+        return thisBounds.Left >= otherBounds.Left &&
+               thisBounds.Top >= otherBounds.Top &&
+               thisBounds.Left + thisBounds.Width <= otherBounds.Left + otherBounds.Width &&
+               thisBounds.Top + thisBounds.Height <= otherBounds.Top + otherBounds.Height;
     }
 
     public bool ResolveCollision(Bounds other)

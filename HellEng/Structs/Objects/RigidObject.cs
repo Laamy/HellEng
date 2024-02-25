@@ -1,4 +1,6 @@
-﻿using SFML.System;
+﻿using SFML.Graphics;
+using SFML.System;
+using System;
 
 internal class RigidObject : SolidObject
 {
@@ -29,12 +31,38 @@ internal class RigidObject : SolidObject
 
                 if (Bounds.ResolveCollision(liquid.Bounds, out bool xAxis, false))
                 {
-                    inLiquid = true;
-                    Grounded = true;
-                    hasCollided = true;
+                    // we're inside of the liquid but its still possible that we're inside a clipped area
+                    // if we are we shouldnt act as we're in liquid
+                    bool inClipping = false;
 
-                    foreach (string key in Velocity.Keys)
-                        Velocity[key] /= 1 + liquid.Friction;
+                    foreach (var clip in liquid.ClippingAreas)
+                    {
+                        FloatRect tempBounds = clip.Value;
+
+                        // offset the tempBounds by the liquid position
+                        tempBounds.Left += liquid.Position.X;
+                        tempBounds.Top += liquid.Position.Y;
+
+                        if (Bounds.IsInside(tempBounds))
+                            inClipping = true;
+                    }
+
+                    if (!inClipping)
+                    {
+                        // not in a clipping area so act as we're in liquid
+                        inLiquid = true;
+                        Grounded = true;
+                        hasCollided = true;
+
+                        foreach (string key in Velocity.Keys)
+                            Velocity[key] /= 1 + liquid.Friction;
+                    }
+                    else
+                    {
+                        inLiquid = false;
+                        Grounded = false;
+                        hasCollided = false;
+                    }
                 }
             }
         }

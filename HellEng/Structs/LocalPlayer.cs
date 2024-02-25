@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+
 using System;
 
 internal class LocalPlayer : RigidObject
@@ -8,13 +9,15 @@ internal class LocalPlayer : RigidObject
     public LocalPlayer()
     {
         Position = new Vector2f(100, 100); // start pos
-        Size = new Vector2f(50, 50); // test size
+        Size = new Vector2f(32, 32); // test size
         Color = Color.Green; // test colour
         Rotation = 0; // test rotation
     }
 
-    public float MoveSpeed = 5.0f;
-    public float JumpPower = 25.0f;
+    public float MoveSpeed = 3.0f;
+    public float JumpPower = 20.0f;
+    public float SwimUpSpeed = 5.0f;
+    public float SprintScale = 1.5f;
 
     public override void Update(Game game)
     {
@@ -27,7 +30,11 @@ internal class LocalPlayer : RigidObject
             // jump
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
-                if (Grounded)
+                if (InWater)
+                {
+                    move.Y -= SwimUpSpeed;
+                }
+                else if (Grounded)
                 {
                     move.Y -= JumpPower;
                     Grounded = false;
@@ -40,6 +47,9 @@ internal class LocalPlayer : RigidObject
             // left right
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) move.X -= MoveSpeed;
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) move.X += MoveSpeed;
+
+            // sprint
+            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift)) move.X *= SprintScale;
 
             Velocity["movement"] += move;
         }
