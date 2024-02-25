@@ -2,8 +2,6 @@
 using SFML.System;
 using SFML.Window;
 
-using System;
-
 internal class DebugMenu : RawObject
 {
     bool init = false;
@@ -24,18 +22,18 @@ internal class DebugMenu : RawObject
         // draw a simple menu on the right side of the window that lists the level objects
         
         // draw the background
-        foreach (RawObject obj in Game.Instance.Level.children)
+        foreach (RawObject obj in Game.Instance.Level.Children)
         {
             if (obj == null) continue;
 
             // background for the object label
             RectangleShape rect = new RectangleShape(new Vector2f(200, FONT_SIZE));
-            rect.Position = new SFML.System.Vector2f(e.Size.X - 150, 0 + FONT_SIZE * Game.Instance.Level.children.IndexOf(obj));
+            rect.Position = new SFML.System.Vector2f(e.Size.X - 150, 0 + FONT_SIZE * Game.Instance.Level.Children.IndexOf(obj));
             rect.FillColor = Color.White;
             e.Draw(rect);
 
             Text text = new Text(obj.GetType().Name, Game.Instance.FontRepos.GetFont("arial"), FONT_SIZE);
-            text.Position = new SFML.System.Vector2f(e.Size.X - 150, 0 + FONT_SIZE * Game.Instance.Level.children.IndexOf(obj));
+            text.Position = new SFML.System.Vector2f(e.Size.X - 150, 0 + FONT_SIZE * Game.Instance.Level.Children.IndexOf(obj));
             text.FillColor = Color.Black;
             e.Draw(text);
 
@@ -67,18 +65,19 @@ internal class DebugMenu : RawObject
                     RigidObject rigid = (RigidObject)obj;
 
                     DrawStrAt(e, $"Velocity: {rigid.Velocity.Main}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 4)), Color.Black);
-                    DrawStrAt(e, $"AirDrag: {rigid.AirDrag}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 5)), Color.Black);
+                    DrawStrAt(e, $"AirDrag: {rigid.AirFriction}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 5)), Color.Black);
                     DrawStrAt(e, $"Colliding: {rigid.Colliding}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 6)), Color.Black);
                     DrawStrAt(e, $"Grounded: {rigid.Grounded}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 7)), Color.Black);
-                    DrawStrAt(e, $"Gravity: {rigid.Gravity}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 8)), Color.Black);
+                    DrawStrAt(e, $"InWater: {rigid.InWater}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 8)), Color.Black);
+                    DrawStrAt(e, $"Gravity: {rigid.Gravity}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 9)), Color.Black);
                 }
 
                 if (obj is LocalPlayer)
                 {
                     LocalPlayer localPlayer = (LocalPlayer)obj;
 
-                    DrawStrAt(e, $"MoveSpeed: {localPlayer.MoveSpeed}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 9)), Color.Black);
-                    DrawStrAt(e, $"JumpPower: {localPlayer.JumpPower}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 10)), Color.Black);
+                    DrawStrAt(e, $"MoveSpeed: {localPlayer.MoveSpeed}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 10)), Color.Black);
+                    DrawStrAt(e, $"JumpPower: {localPlayer.JumpPower}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 11)), Color.Black);
                 }
 
                 if (obj is DebugMenu)
@@ -113,12 +112,12 @@ internal class DebugMenu : RawObject
         //Console.WriteLine(pos.X + " " + pos.Y);
 
         // check what object is under the mouse
-        foreach (RawObject obj in Game.Instance.Level.children)
+        foreach (RawObject obj in Game.Instance.Level.Children)
         {
             if (obj == null) continue;
             
             // calculate the bounding box of the object label
-            FloatRect rect = new FloatRect(window.Size.X - 200, 0 + FONT_SIZE * Game.Instance.Level.children.IndexOf(obj), 200, FONT_SIZE);
+            FloatRect rect = new FloatRect(window.Size.X - 200, 0 + FONT_SIZE * Game.Instance.Level.Children.IndexOf(obj), 200, FONT_SIZE);
 
             // check if the mouse is inside the bounding box
             if (rect.Contains(pos.X, pos.Y))

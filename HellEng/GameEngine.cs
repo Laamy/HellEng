@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using View = SFML.Graphics.View;
 
@@ -49,6 +50,22 @@ internal class GameEngine
 
         long accumulatedTicks = 0;
 
+        Task.Factory.StartNew(() =>
+        {
+            while (window.IsOpen)
+            {
+                // handle update (60 u_targetTicksPer)
+                long u_currTicks = DateTime.Now.Ticks;
+                long u_elapsedTicks = u_currTicks - u_prevTicks;
+
+                if (u_elapsedTicks >= u_targetTicksPer)
+                {
+                    u_prevTicks = u_currTicks;
+                    OnUpdate(); // update game
+                }
+            }
+        });
+
         while (window.IsOpen)
         {
             // handle draw (165 targetFPS)
@@ -59,16 +76,6 @@ internal class GameEngine
             {
                 prevTicks = currTicks;
                 OnDraw(window); // redraw window
-            }
-
-            // handle update (60 u_targetTicksPer)
-            long u_currTicks = DateTime.Now.Ticks;
-            long u_elapsedTicks = u_currTicks - u_prevTicks;
-
-            if (u_elapsedTicks >= u_targetTicksPer)
-            {
-                u_prevTicks = u_currTicks;
-                OnUpdate(); // update game
             }
 
             //Thread.Sleep(1);

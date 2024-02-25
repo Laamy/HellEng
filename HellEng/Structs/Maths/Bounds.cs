@@ -98,7 +98,7 @@ class Bounds
     public bool ResolveCollision(Bounds other)
         => ResolveCollision(other, out _);
 
-    public bool ResolveCollision(Bounds other, out bool xAxis)
+    public bool ResolveCollision(Bounds other, out bool xAxis, bool adjust = true)
     {
         if (Intersects(other))
         {
@@ -117,17 +117,23 @@ class Bounds
             // Determine the axis of minimum penetration
             if (overlapX < overlapY)
             {
-                // Colliding on the X-axis
-                float pushX = overlapX * (this.Position.X < other.Position.X ? -1 : 1);
-                Position = new Vector2f(Position.X + pushX, Position.Y);
+                if (adjust)
+                {
+                    // Colliding on the X-axis
+                    float pushX = overlapX * (this.Position.X < other.Position.X ? -1 : 1);
+                    Position = new Vector2f(Position.X + pushX, Position.Y);
+                }
 
                 xAxis = true;
             }
             else
             {
-                // Colliding on the Y-axis
-                float pushY = overlapY * (this.Position.Y < other.Position.Y ? -1 : 1);
-                Position = new Vector2f(Position.X, Position.Y + pushY);
+                if (adjust)
+                {
+                    // Colliding on the Y-axis
+                    float pushY = overlapY * (this.Position.Y < other.Position.Y ? -1 : 1);
+                    Position = new Vector2f(Position.X, Position.Y + pushY);
+                }
 
                 xAxis = false;
             }
