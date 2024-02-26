@@ -160,23 +160,13 @@ internal class Game : GameEngine
             // create & add new clipping area based on ship dimensions (100,100 as shape)
             ocean.AddClippingArea(ship.Position - ocean.Position, new Vector2f(100, 100));
         }
-
-        // update the debug text
-        //Instance.SetDebugText(new string[] {
-        //    //"FPS: " + (1 / DeltaTime).ToString("0"),
-        //    "Player Position: " + Instance.Player.Position.ToString(),
-        //    "Player Size: " + Instance.Player.Size.ToString(),
-        //    "Player Rotation: " + Instance.Player.Rotation.ToString(),
-        //    "Player Velocity: " + Instance.Player.Velocity.Main.ToString(),
-        //    "Player Movement: " + Instance.Player.Velocity["movement"].ToString(),
-        //});
     }
 
-    public static Color DarkSkyBlue = new Color(0, 0, 128);
+    public static Color skyblue = new Color(135, 206, 235);
 
     protected override void OnDraw(RenderWindow ctx)
     {
-        ctx.Clear(Color.Red); // clear buffer ready for next frame
+        ctx.Clear(skyblue); // clear buffer ready for next frame
         ctx.DispatchEvents(); // handle window events
 
         Instance.Level.Draw(ctx); // draw scene

@@ -79,6 +79,7 @@ internal class DebugMenu : RawObject
 
                     DrawStrAt(e, $"MoveSpeed: {localPlayer.MoveSpeed}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 11)), Color.Black);
                     DrawStrAt(e, $"JumpPower: {localPlayer.JumpPower}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 12)), Color.Black);
+                    DrawStrAt(e, $"Movement: {localPlayer.Velocity["movement"]}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 13)), Color.Black);
                 }
 
                 if (obj is DebugMenu)
@@ -112,6 +113,8 @@ internal class DebugMenu : RawObject
 
         //Console.WriteLine(pos.X + " " + pos.Y);
 
+        bool wasInMenu = false;
+
         // check what object is under the mouse
         foreach (RawObject obj in Game.Instance.Level.Children)
         {
@@ -123,9 +126,25 @@ internal class DebugMenu : RawObject
             // check if the mouse is inside the bounding box
             if (rect.Contains(pos.X, pos.Y))
             {
+                wasInMenu = true;
                 // if it is, expand the object
                 CurrentExpanded = obj;
             }
+        }
+
+        if (!wasInMenu)
+        {
+            CurrentExpanded = null; // unselected so lets clear the onscreen debug info bout that object
+
+            // lets create a new object at the mouse position thats rigidy
+            RigidObject rigid = new RigidObject()
+            {
+                Position = new Vector2f(pos.X, pos.Y),
+                Size = new Vector2f(10, 10),
+                Color = new Color(0, 200, 0),
+            };
+
+            Game.Instance.Level.Children.Add(rigid);
         }
     }
 }
