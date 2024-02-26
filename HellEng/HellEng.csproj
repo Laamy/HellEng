@@ -99,6 +99,7 @@
     <Compile Include="Structs\Objects\SolidObject.cs" />
     <Compile Include="Structs\Objects\SolidText.cs" />
     <Compile Include="Structs\Objects\LiquidObject.cs" />
+    <Compile Include="Structs\SystemTimer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -43,10 +43,10 @@ internal class GameEngine
         OnLoad(); // load event
 
         long targetTicksPerFrame = TimeSpan.TicksPerSecond / targetFPS;
-        long prevTicks = DateTime.Now.Ticks;
+        long prevTicks = DateTime.UtcNow.Ticks;
 
         long u_targetTicksPer = TimeSpan.TicksPerSecond / updateRate;
-        long u_prevTicks = DateTime.Now.Ticks;
+        long u_prevTicks = DateTime.UtcNow.Ticks;
 
         long accumulatedTicks = 0;
 
@@ -69,7 +69,7 @@ internal class GameEngine
         while (window.IsOpen)
         {
             // handle draw (165 targetFPS)
-            long currTicks = DateTime.Now.Ticks;
+            long currTicks = DateTime.UtcNow.Ticks;
             long elapsedTicks = currTicks - prevTicks;
 
             if (elapsedTicks >= targetTicksPerFrame)
@@ -80,7 +80,7 @@ internal class GameEngine
 
 
             // handle update (60 u_targetTicksPer)
-            long u_currTicks = DateTime.Now.Ticks;
+            long u_currTicks = DateTime.UtcNow.Ticks;
             long u_elapsedTicks = u_currTicks - u_prevTicks;
 
             if (u_elapsedTicks >= u_targetTicksPer)
@@ -89,7 +89,7 @@ internal class GameEngine
                 OnUpdate(); // update game
             }
 
-            //Thread.Sleep(1);
+            SystemTimer.Sleep(1);
         }
 
         OnUnload();

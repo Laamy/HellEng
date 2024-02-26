@@ -149,7 +149,7 @@ internal class Game : GameEngine
 
         if (airBubble != null)
         {
-            if (airBubble.Position.X > 150)
+            if (airBubble.Position.X > 500)
             {
                 airBubble.Position = new Vector2f(100, airBubble.Position.Y);
             }
