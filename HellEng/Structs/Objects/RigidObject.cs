@@ -6,8 +6,8 @@ internal class RigidObject : SolidObject
 {
     public Velocity Velocity { get; } = new Velocity(); // body velocity
 
-    public float Gravity = 1.3f; // gravity force applied to the object
-    public float AirFriction = 0.1f; // air drag force applied to the object
+    public float Gravity = 0.8f; // gravity force applied to the object
+    public float AirFriction = 0.05f; // air drag force applied to the object
 
     public bool Colliding = false; // is the object colliding with anything?
     public bool Grounded = false; // is the object grounded?
