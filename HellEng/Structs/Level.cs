@@ -26,4 +26,28 @@ internal class Level
             child.Update(game);
         }
     }
+
+    public RawObject ByTag(string tag)
+    {
+        foreach (RawObject child in Children)
+        {
+            if (child is SolidObject)
+            {
+                SolidObject obj = (SolidObject)child;
+
+                if (obj.Tags.Contains(tag)) 
+                    return obj;
+            }
+
+            if (child is LiquidObject)
+            {
+                LiquidObject obj = (LiquidObject)child;
+
+                if (obj.Tags.Contains(tag))
+                    return obj;
+            }
+        }
+
+        return null;
+    }
 }

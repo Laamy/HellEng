@@ -50,21 +50,21 @@ internal class GameEngine
 
         long accumulatedTicks = 0;
 
-        Task.Factory.StartNew(() =>
-        {
-            while (window.IsOpen)
-            {
-                // handle update (60 u_targetTicksPer)
-                long u_currTicks = DateTime.Now.Ticks;
-                long u_elapsedTicks = u_currTicks - u_prevTicks;
+        //Task.Factory.StartNew(() =>
+        //{
+        //    while (window.IsOpen)
+        //    {
+        //        // handle update (60 u_targetTicksPer)
+        //        long u_currTicks = DateTime.Now.Ticks;
+        //        long u_elapsedTicks = u_currTicks - u_prevTicks;
 
-                if (u_elapsedTicks >= u_targetTicksPer)
-                {
-                    u_prevTicks = u_currTicks;
-                    OnUpdate(); // update game
-                }
-            }
-        });
+        //        if (u_elapsedTicks >= u_targetTicksPer)
+        //        {
+        //            u_prevTicks = u_currTicks;
+        //            OnUpdate(); // update game
+        //        }
+        //    }
+        //});
 
         while (window.IsOpen)
         {
@@ -76,6 +76,17 @@ internal class GameEngine
             {
                 prevTicks = currTicks;
                 OnDraw(window); // redraw window
+            }
+
+
+            // handle update (60 u_targetTicksPer)
+            long u_currTicks = DateTime.Now.Ticks;
+            long u_elapsedTicks = u_currTicks - u_prevTicks;
+
+            if (u_elapsedTicks >= u_targetTicksPer)
+            {
+                u_prevTicks = u_currTicks;
+                OnUpdate(); // update game
             }
 
             //Thread.Sleep(1);

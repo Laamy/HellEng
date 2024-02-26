@@ -3,6 +3,7 @@
 using SFML.Graphics;
 using SFML.System;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 #endregion
@@ -58,39 +59,51 @@ internal class Game : GameEngine
             Position = new Vector2f(0, Size.Y / 2),
             Size = new Vector2f(Size.X, Size.Y / 2),
             Color = new Color(0, 0, 255, 128),
+            Tags = new List<string>(new string[] { "ocean" }),
         };
 
         ocean.AddClippingArea(new Vector2f(100, 100), new Vector2f(100, 100));
+        ocean.Invalidate();
 
         {
-            // we've created an air bubble in the water so lets give it some borders of solidObjects
-            Instance.Level.Children.Add(new SolidObject()
+            // we've created an air bubble in the water so lets give it some borders
+            GroupObject airBubble = new GroupObject()
             {
                 Position = ocean.Position + new Vector2f(100, 100),
+                Tags = new List<string>(new string[] { "mini-ship" }),
+            };
+
+            // add some white borders to the air bubble
+            airBubble.Children.Add(new SolidObject()
+            {
+                Position = new Vector2f(0, 0),
                 Size = new Vector2f(100, 10),
                 Color = Color.White,
             });
-            Instance.Level.Children.Add(new SolidObject()
+
+            airBubble.Children.Add(new SolidObject()
             {
-                Position = ocean.Position + new Vector2f(100, 100),
+                Position = new Vector2f(0, 0),
                 Size = new Vector2f(10, 100),
                 Color = Color.White,
             });
-            Instance.Level.Children.Add(new SolidObject()
+
+            airBubble.Children.Add(new SolidObject()
             {
-                Position = ocean.Position + new Vector2f(190, 100),
+                Position = new Vector2f(90, 0),
                 Size = new Vector2f(10, 100),
                 Color = Color.White,
             });
-            Instance.Level.Children.Add(new SolidObject()
+
+            airBubble.Children.Add(new SolidObject()
             {
-                Position = ocean.Position + new Vector2f(100, 195),
+                Position = new Vector2f(0, 95),
                 Size = new Vector2f(50, 5),
                 Color = Color.White,
             });
-        }
 
-        ocean.Invalidate();
+            Instance.Level.Children.Add(airBubble);
+        }
 
         // cover the boittom half of map as WaterObject
         Instance.Level.Children.Add(ocean);
@@ -130,6 +143,34 @@ internal class Game : GameEngine
     protected override void OnUpdate()
     {
         Instance.Level.Update(this); // update game logic
+
+        //move the air bubble to the side 1 unit, if its at x=200 we move it to x=100
+        SolidObject airBubble = (SolidObject)Instance.Level.ByTag("mini-ship");
+
+        if (airBubble != null)
+        {
+            if (airBubble.Position.X > 150)
+            {
+                airBubble.Position = new Vector2f(100, airBubble.Position.Y);
+            }
+            else
+            {
+                airBubble.Position = new Vector2f(airBubble.Position.X + 1, airBubble.Position.Y);
+            }
+
+            LiquidObject ocean = (LiquidObject)Instance.Level.ByTag("ocean");
+
+            if (ocean != null)
+            {
+                // get cvlipping bounds
+                ocean.ClippingAreas.Clear();
+
+                ocean.AddClippingArea(
+                    new Vector2f(airBubble.Position.X, 100),
+                    new Vector2f(100, 100)
+                );
+            }
+        }
 
         // update the debug text
         //Instance.SetDebugText(new string[] {

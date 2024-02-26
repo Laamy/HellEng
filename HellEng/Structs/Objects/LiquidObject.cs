@@ -3,13 +3,14 @@ using SFML.System;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 
 internal class LiquidObject : RawObject
 {
     private ushort prevId = 0; // the last clipping rectangle id used
 
-    public  ConcurrentDictionary<int, FloatRect> ClippingAreas { get; private set; }
-        = new ConcurrentDictionary<int, FloatRect>(); // the clipping areas for the liquid object indexed by id
+    public  Dictionary<int, RectangleShape> ClippingAreas { get; set; }
+        = new Dictionary<int, RectangleShape>(); // the clipping areas for the liquid object indexed by id
 
     private RenderTexture renderTexture; // the render texture to draw the liquid object to
     private Sprite sprite; // the sprite used to draw the liquid object textures
@@ -67,7 +68,15 @@ internal class LiquidObject : RawObject
         // create rectangleshape
         FloatRect clipRect = new FloatRect(new Vector2f(position.X, position.Y), new Vector2f(size.X, size.Y));
 
-        ClippingAreas[prevId++] = clipRect; // add to the clipping areas
+        // create new drawable for clipping rectangle
+        RectangleShape clip = new RectangleShape()
+        {
+            Position = position,
+            Size = size,
+            FillColor = Color.Transparent,
+        };
+
+        ClippingAreas[prevId++] = clip; // add to the clipping areas
 
         Invalidate(); // invalidate the object cuz we need to redraw
 
@@ -77,39 +86,18 @@ internal class LiquidObject : RawObject
     public void InvalidateSprite()
     {
         if (sprite != null)
-            sprite.Dispose(); // dispose of the sprite
+            sprite.Dispose();
 
-        sprite = new Sprite(renderTexture.Texture); // create a new sprite
-        sprite.Position = Position;
+        sprite = new Sprite(renderTexture.Texture); // create the sprite
+        sprite.Position = Position; // set the position
     }
 
-    private void EraseRegion(FloatRect area) // this works but no way its fast so TODO: optimzie this
+    private void EraseRegion(RectangleShape area) // this works but no way its fast so TODO: optimzie this
     {
         if (area == null)
             return;
 
-        // Get the texture data from the RenderTexture
-        Image textureData = renderTexture.Texture.CopyToImage();
-
-        // Calculate the integer rectangle for the specified area
-        IntRect intRect = new IntRect(
-            (int)area.Left,
-            (int)area.Top,
-            (int)area.Width,
-            (int)area.Height
-        );
-
-        // Erase the pixels in the specified region by setting them to transparent
-        for (int y = intRect.Top; y < intRect.Top + intRect.Height; ++y)
-        {
-            for (int x = intRect.Left; x < intRect.Left + intRect.Width; ++x)
-            {
-                textureData.SetPixel((uint)x, (uint)y, Color.Transparent);
-            }
-        }
-
-        // Update the texture with the new data
-        renderTexture.Texture.Update(textureData);
+        renderTexture.Draw(area, new RenderStates(BlendMode.None));
     }
 
     public void Invalidate()

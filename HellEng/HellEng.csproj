@@ -93,6 +93,7 @@
     <Compile Include="Structs\Maths\Bounds.cs" />
     <Compile Include="Structs\Maths\MathHelper.cs" />
     <Compile Include="Structs\Maths\Velocity.cs" />
+    <Compile Include="Structs\Objects\GroupObject.cs" />
     <Compile Include="Structs\Objects\RawObject.cs" />
     <Compile Include="Structs\Objects\RigidObject.cs" />
     <Compile Include="Structs\Objects\SolidObject.cs" />

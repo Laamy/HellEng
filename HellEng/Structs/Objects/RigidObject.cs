@@ -37,7 +37,7 @@ internal class RigidObject : SolidObject
 
                     foreach (var clip in liquid.ClippingAreas)
                     {
-                        FloatRect tempBounds = clip.Value;
+                        FloatRect tempBounds = clip.Value.GetGlobalBounds();
 
                         // offset the tempBounds by the liquid position
                         tempBounds.Left += liquid.Position.X;
@@ -98,6 +98,33 @@ internal class RigidObject : SolidObject
                     Velocity.Main = m_Velocity;
 
                     hasCollided = true;
+                }
+            }
+
+            if (obj is GroupObject)
+            {
+                GroupObject group = (GroupObject)obj;
+
+                foreach (var child in group.Children)
+                {
+                    if (child == null) continue; // skip if null
+
+                    if (Bounds.ResolveCollision(child.Bounds, out bool xAxis))
+                    {
+                        Vector2f m_Velocity = Velocity.Main;
+
+                        if (xAxis)
+                            m_Velocity.X = 0;
+                        else
+                        {
+                            Grounded = true; // for now this counts as up and down grounded (you can jump on the roof)
+                            m_Velocity.Y = 0;
+                        }
+
+                        Velocity.Main = m_Velocity;
+
+                        hasCollided = true;
+                    }
                 }
             }
         }
