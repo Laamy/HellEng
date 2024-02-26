@@ -27,6 +27,12 @@ internal class SolidObject : RawObject
         set => Bounds.Position = value;
     }
 
+    public Vector2f OffsetPosition
+    {
+        get => Bounds.OffsetPosition;
+        set => Bounds.OffsetPosition = value;
+    }
+
     public float Rotation
     {
         get => Bounds.Rotation;

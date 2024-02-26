@@ -1,6 +1,7 @@
 ﻿#region Includes
 
 using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -42,6 +43,14 @@ internal class Level
             if (child is LiquidObject)
             {
                 LiquidObject obj = (LiquidObject)child;
+
+                if (obj.Tags.Contains(tag))
+                    return obj;
+            }
+
+            if (child is GroupObject)
+            {
+                GroupObject obj = (GroupObject)child;
 
                 if (obj.Tags.Contains(tag))
                     return obj;

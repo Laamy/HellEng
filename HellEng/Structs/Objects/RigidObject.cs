@@ -1,6 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using System;
 
 internal class RigidObject : SolidObject
 {
@@ -29,7 +28,7 @@ internal class RigidObject : SolidObject
 
                 LiquidObject liquid = (LiquidObject)obj;
 
-                if (Bounds.ResolveCollision(liquid.Bounds, out bool xAxis, false))
+                if (Bounds.ResolveCollision(liquid.Bounds, new Vector2f(0, 0), out bool xAxis, false))
                 {
                     // we're inside of the liquid but its still possible that we're inside a clipped area
                     // if we are we shouldnt act as we're in liquid
@@ -83,7 +82,9 @@ internal class RigidObject : SolidObject
 
                 if (solid == this) continue; // skip if it's the player
 
-                if (Bounds.ResolveCollision(solid.Bounds, out bool xAxis))
+                // clone the bounds with the offset transform applied
+
+                if (Bounds.ResolveCollision(solid.Bounds, solid.OffsetPosition, out bool xAxis))
                 {
                     Vector2f m_Velocity = Velocity.Main;
 
@@ -98,33 +99,6 @@ internal class RigidObject : SolidObject
                     Velocity.Main = m_Velocity;
 
                     hasCollided = true;
-                }
-            }
-
-            if (obj is GroupObject)
-            {
-                GroupObject group = (GroupObject)obj;
-
-                foreach (var child in group.Children)
-                {
-                    if (child == null) continue; // skip if null
-
-                    if (Bounds.ResolveCollision(child.Bounds, out bool xAxis))
-                    {
-                        Vector2f m_Velocity = Velocity.Main;
-
-                        if (xAxis)
-                            m_Velocity.X = 0;
-                        else
-                        {
-                            Grounded = true; // for now this counts as up and down grounded (you can jump on the roof)
-                            m_Velocity.Y = 0;
-                        }
-
-                        Velocity.Main = m_Velocity;
-
-                        hasCollided = true;
-                    }
                 }
             }
         }

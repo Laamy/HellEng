@@ -43,9 +43,10 @@ internal class DebugMenu : RawObject
                 {
                     SolidObject solid = (SolidObject)obj;
 
-                    DrawStrAt(e, $"Position: {solid.Position}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 1)), Color.Black);
-                    DrawStrAt(e, $"Size: {solid.Size}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 2)), Color.Black);
-                    DrawStrAt(e, $"Rotation: {solid.Rotation}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 3)), Color.Black);
+                    DrawStrAt(e, $"OffsetPosition: {solid.OffsetPosition}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 1)), Color.Black);
+                    DrawStrAt(e, $"Position: {solid.Position}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 2)), Color.Black);
+                    DrawStrAt(e, $"Size: {solid.Size}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 3)), Color.Black);
+                    DrawStrAt(e, $"Rotation: {solid.Rotation}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 4)), Color.Black);
                 }
 
                 if (obj is SolidText)
@@ -64,20 +65,20 @@ internal class DebugMenu : RawObject
                 {
                     RigidObject rigid = (RigidObject)obj;
 
-                    DrawStrAt(e, $"Velocity: {rigid.Velocity.Main}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 4)), Color.Black);
-                    DrawStrAt(e, $"AirDrag: {rigid.AirFriction}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 5)), Color.Black);
-                    DrawStrAt(e, $"Colliding: {rigid.Colliding}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 6)), Color.Black);
-                    DrawStrAt(e, $"Grounded: {rigid.Grounded}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 7)), Color.Black);
-                    DrawStrAt(e, $"InWater: {rigid.InWater}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 8)), Color.Black);
-                    DrawStrAt(e, $"Gravity: {rigid.Gravity}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 9)), Color.Black);
+                    DrawStrAt(e, $"Velocity: {rigid.Velocity.Main}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 5)), Color.Black);
+                    DrawStrAt(e, $"AirDrag: {rigid.AirFriction}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 6)), Color.Black);
+                    DrawStrAt(e, $"Colliding: {rigid.Colliding}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 7)), Color.Black);
+                    DrawStrAt(e, $"Grounded: {rigid.Grounded}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 8)), Color.Black);
+                    DrawStrAt(e, $"InWater: {rigid.InWater}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 9)), Color.Black);
+                    DrawStrAt(e, $"Gravity: {rigid.Gravity}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 10)), Color.Black);
                 }
 
                 if (obj is LocalPlayer)
                 {
                     LocalPlayer localPlayer = (LocalPlayer)obj;
 
-                    DrawStrAt(e, $"MoveSpeed: {localPlayer.MoveSpeed}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 10)), Color.Black);
-                    DrawStrAt(e, $"JumpPower: {localPlayer.JumpPower}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 11)), Color.Black);
+                    DrawStrAt(e, $"MoveSpeed: {localPlayer.MoveSpeed}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 11)), Color.Black);
+                    DrawStrAt(e, $"JumpPower: {localPlayer.JumpPower}", new Vector2f(10, e.Size.Y - 10 - (FONT_SIZE * 12)), Color.Black);
                 }
 
                 if (obj is DebugMenu)

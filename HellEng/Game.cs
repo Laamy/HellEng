@@ -73,36 +73,36 @@ internal class Game : GameEngine
                 Tags = new List<string>(new string[] { "mini-ship" }),
             };
 
+            Instance.Level.Children.Add(airBubble);
+
             // add some white borders to the air bubble
-            airBubble.Children.Add(new SolidObject()
+            airBubble.Add(Instance.Level, new SolidObject()
             {
                 Position = new Vector2f(0, 0),
                 Size = new Vector2f(100, 10),
                 Color = Color.White,
             });
 
-            airBubble.Children.Add(new SolidObject()
+            airBubble.Add(Instance.Level, new SolidObject()
             {
                 Position = new Vector2f(0, 0),
                 Size = new Vector2f(10, 100),
                 Color = Color.White,
             });
 
-            airBubble.Children.Add(new SolidObject()
+            airBubble.Add(Instance.Level, new SolidObject()
             {
                 Position = new Vector2f(90, 0),
                 Size = new Vector2f(10, 100),
                 Color = Color.White,
             });
 
-            airBubble.Children.Add(new SolidObject()
+            airBubble.Add(Instance.Level, new SolidObject()
             {
                 Position = new Vector2f(0, 95),
                 Size = new Vector2f(50, 5),
                 Color = Color.White,
             });
-
-            Instance.Level.Children.Add(airBubble);
         }
 
         // cover the boittom half of map as WaterObject
@@ -144,32 +144,21 @@ internal class Game : GameEngine
     {
         Instance.Level.Update(this); // update game logic
 
-        //move the air bubble to the side 1 unit, if its at x=200 we move it to x=100
-        SolidObject airBubble = (SolidObject)Instance.Level.ByTag("mini-ship");
+        LiquidObject ocean = (LiquidObject)Instance.Level.ByTag("ocean");
+        GroupObject ship = (GroupObject)Instance.Level.ByTag("mini-ship");
 
-        if (airBubble != null)
+        // move the ship over by a bit then updating the clipping rect in the ocean
+        if (ship != null)
         {
-            if (airBubble.Position.X > 500)
-            {
-                airBubble.Position = new Vector2f(100, airBubble.Position.Y);
-            }
+            if (ship.Position.X < Size.X - 100)
+                ship.Position += new Vector2f(1, 0);
             else
-            {
-                airBubble.Position = new Vector2f(airBubble.Position.X + 1, airBubble.Position.Y);
-            }
+                ship.Position = new Vector2f(0, ship.Position.Y);
 
-            LiquidObject ocean = (LiquidObject)Instance.Level.ByTag("ocean");
+            ocean.ClippingAreas.Clear();
 
-            if (ocean != null)
-            {
-                // get cvlipping bounds
-                ocean.ClippingAreas.Clear();
-
-                ocean.AddClippingArea(
-                    new Vector2f(airBubble.Position.X, 100),
-                    new Vector2f(100, 100)
-                );
-            }
+            // create & add new clipping area based on ship dimensions (100,100 as shape)
+            ocean.AddClippingArea(ship.Position - ocean.Position, new Vector2f(100, 100));
         }
 
         // update the debug text

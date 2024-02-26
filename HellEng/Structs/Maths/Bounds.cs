@@ -9,6 +9,7 @@ class Bounds
     public FloatRect _original; // original bounds
     public Transformable _transformable; // transformable object
     public RectangleShape _rect; // rectangle shape
+    Vector2f _transformOffset; // transform offset
 
     public FloatRect? _cache; // cached bounds to avoid recalculating when not needed
 
@@ -25,10 +26,41 @@ class Bounds
         // get the bounds of the transformable object
         FloatRect bounds = GetGlobalBounds();
 
+        // store the bounds in the cache
         _cache = bounds;
+
+        // create new transform offset
+        _transformOffset = new Vector2f(0, 0); // this allows me to easily offset the bounds for group objects
 
         // create a rectangle shape
         _rect = new RectangleShape(new Vector2f(bounds.Width, bounds.Height));
+    }
+    
+    public Bounds Clone()
+    {
+        Bounds clone = new Bounds(_original);
+
+        // clone over the transformable object
+        clone._transformable = new Transformable();
+        clone._transformable.Position = new Vector2f(_original.Left, _original.Top);
+        clone._transformable.Origin = new Vector2f(_original.Width / 2, _original.Height / 2);
+
+        // clone over the rectangle shape
+        clone._rect = new RectangleShape(new Vector2f(_original.Width, _original.Height))
+        {
+            FillColor = _rect.FillColor
+        };
+
+        // clone over the transform offset
+        clone._transformOffset = new Vector2f(clone._transformOffset.X, clone._transformOffset.Y);
+
+        // get the bounds of the transformable object
+        FloatRect bounds = clone.GetGlobalBounds();
+
+        // store the bounds in the cache
+        clone._cache = bounds;
+
+        return clone;
     }
 
     public float Rotation
@@ -43,6 +75,16 @@ class Bounds
         set
         {
             _transformable.Position = value;
+            _cache = null; // clear the cache to force recalculation
+        }
+    }
+
+    public Vector2f OffsetPosition
+    {
+        get => _transformOffset;
+        set
+        {
+            _transformOffset = value;
             _cache = null; // clear the cache to force recalculation
         }
     }
@@ -68,7 +110,14 @@ class Bounds
     {
         if (_cache == null)
         {
+            // get the bounds of the transformable object
             FloatRect bounds = _transformable.Transform.TransformRect(_original);
+
+            // add the transform offset to the FloatRect result
+            bounds.Left += _transformOffset.X;
+            bounds.Top += _transformOffset.Y;
+
+            // store the bounds in the cache
             _cache = bounds;
             return bounds;
         }
@@ -107,14 +156,14 @@ class Bounds
     }
 
     public bool ResolveCollision(Bounds other)
-        => ResolveCollision(other, out _);
+        => ResolveCollision(other, new Vector2f(0, 0), out _);
 
-    public bool ResolveCollision(Bounds other, out bool xAxis, bool adjust = true)
+    public bool ResolveCollision(Bounds other, Vector2f offset, out bool xAxis, bool adjust = true)
     {
         if (Intersects(other))
         {
-            FloatRect thisRotatedBounds = CalculateRotatedBounds();
-            FloatRect otherRotatedBounds = other.CalculateRotatedBounds();
+            FloatRect thisRotatedBounds = CalculateRotatedBounds(OffsetPosition);
+            FloatRect otherRotatedBounds = other.CalculateRotatedBounds(offset);
 
             float minX = Math.Max(thisRotatedBounds.Left, otherRotatedBounds.Left);
             float maxX = Math.Min(thisRotatedBounds.Left + thisRotatedBounds.Width, otherRotatedBounds.Left + otherRotatedBounds.Width);
@@ -125,14 +174,17 @@ class Bounds
             float overlapX = maxX - minX;
             float overlapY = maxY - minY;
 
+            Vector2f thisPos = Position + OffsetPosition;
+            Vector2f otherPos = other.Position + offset;
+
             // Determine the axis of minimum penetration
             if (overlapX < overlapY)
             {
                 if (adjust)
                 {
                     // Colliding on the X-axis
-                    float pushX = overlapX * (this.Position.X < other.Position.X ? -1 : 1);
-                    Position = new Vector2f(Position.X + pushX, Position.Y);
+                    float pushX = overlapX * (thisPos.X < otherPos.X ? -1 : 1);
+                    Position = new Vector2f(thisPos.X + pushX, thisPos.Y);
                 }
 
                 xAxis = true;
@@ -142,8 +194,8 @@ class Bounds
                 if (adjust)
                 {
                     // Colliding on the Y-axis
-                    float pushY = overlapY * (this.Position.Y < other.Position.Y ? -1 : 1);
-                    Position = new Vector2f(Position.X, Position.Y + pushY);
+                    float pushY = overlapY * (thisPos.Y < otherPos.Y ? -1 : 1);
+                    Position = new Vector2f(thisPos.X, thisPos.Y + pushY);
                 }
 
                 xAxis = false;
@@ -157,7 +209,7 @@ class Bounds
     }
 
     // Helper method to calculate rotated bounds
-    private FloatRect CalculateRotatedBounds()
+    private FloatRect CalculateRotatedBounds(Vector2f offset)
     {
         float angleRad = MathHelper.ToRadians(Rotation);
         float sinA = (float)Math.Sin(angleRad);
@@ -176,7 +228,7 @@ class Bounds
         float right = rotatedPoints.Max(p => p.X);
         float bottom = rotatedPoints.Max(p => p.Y);
 
-        return new FloatRect(left, top, right - left, bottom - top);
+        return new FloatRect(left + offset.X, top + offset.Y, right - left, bottom - top);
     }
 
     public bool Intersects(Bounds other, out FloatRect by)
@@ -185,7 +237,7 @@ class Bounds
     public void Draw(RenderWindow ctx, Color? fill = null)
     {
         // render the rectangle shape with the transformable component
-        _rect.Position = Position;
+        _rect.Position = Position + OffsetPosition;
         _rect.Size = Size;
         _rect.Rotation = Rotation;
 
