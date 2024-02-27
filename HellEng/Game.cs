@@ -67,42 +67,14 @@ internal class Game : GameEngine
 
         {
             // we've created an air bubble in the water so lets give it some borders
-            GroupObject airBubble = new GroupObject()
+            MiniSubObject miniShip = new MiniSubObject()
             {
                 Position = ocean.Position + new Vector2f(100, 100),
                 Tags = new List<string>(new string[] { "mini-ship" }),
+                Driver = Instance.Player,
             };
 
-            Instance.Level.Children.Add(airBubble);
-
-            // add some white borders to the air bubble
-            airBubble.Add(Instance.Level, new SolidObject()
-            {
-                Position = new Vector2f(0, 0),
-                Size = new Vector2f(100, 10),
-                Color = Color.White,
-            });
-
-            airBubble.Add(Instance.Level, new SolidObject()
-            {
-                Position = new Vector2f(0, 0),
-                Size = new Vector2f(10, 100),
-                Color = Color.White,
-            });
-
-            airBubble.Add(Instance.Level, new SolidObject()
-            {
-                Position = new Vector2f(90, 0),
-                Size = new Vector2f(10, 100),
-                Color = Color.White,
-            });
-
-            airBubble.Add(Instance.Level, new SolidObject()
-            {
-                Position = new Vector2f(0, 95),
-                Size = new Vector2f(50, 5),
-                Color = Color.White,
-            });
+            Instance.Level.Children.Add(miniShip);
         }
 
         // cover the boittom half of map as WaterObject
@@ -150,15 +122,15 @@ internal class Game : GameEngine
         // move the ship over by a bit then updating the clipping rect in the ocean
         if (ship != null)
         {
-            if (ship.Position.X < Size.X - 100)
-                ship.Position += new Vector2f(1, 0);
-            else
-                ship.Position = new Vector2f(0, ship.Position.Y);
-
             ocean.ClippingAreas.Clear();
 
+            Vector2f mirroredUp = ship.Position;
+
+            // morror up to down
+            mirroredUp.Y = Size.Y - mirroredUp.Y - 100;
+
             // create & add new clipping area based on ship dimensions (100,100 as shape)
-            ocean.AddClippingArea(ship.Position - ocean.Position, new Vector2f(100, 100));
+            ocean.AddClippingArea(mirroredUp, new Vector2f(100, 100));
         }
     }
 
