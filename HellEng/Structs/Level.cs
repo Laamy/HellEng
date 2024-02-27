@@ -59,4 +59,19 @@ internal class Level
 
         return null;
     }
+
+    public List<RawObject> ByClass<T>()
+    {
+        List<RawObject> list = new List<RawObject>();
+
+        foreach (RawObject child in Children)
+        {
+            if (child is T)
+            {
+                list.Add(child);
+            }
+        }
+
+        return list;
+    }
 }
