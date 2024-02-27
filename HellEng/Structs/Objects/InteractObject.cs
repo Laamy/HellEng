@@ -15,13 +15,14 @@ internal class InteractObject : RawObject
     private bool pressed = false;
 
     public int Size = 16;
+    public bool Visible = true;
 
     public override void Draw(RenderWindow e)
     {
         // get the localplayer and check if its within range
         LocalPlayer player = (LocalPlayer)Game.Instance.Level.ByClass<LocalPlayer>()[0];
 
-        if (player.Position.Distance(Position) <= Range)
+        if (Visible && player.Position.Distance(Position) <= Range)
         {
             // draw the interaction menu at object position
             Vector2f pos = Position;
@@ -58,7 +59,7 @@ internal class InteractObject : RawObject
 
     public override void Update(Game game)
     {
-        if (game.IsFocused)
+        if (Visible && game.IsFocused)
         {
             bool BindHeld = Keyboard.IsKeyPressed(Keybind);
 

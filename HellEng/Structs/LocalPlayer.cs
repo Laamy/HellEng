@@ -14,13 +14,21 @@ internal class LocalPlayer : RigidObject
         Rotation = 0; // test rotation
     }
 
-    public float MoveSpeed = 3.0f;
-    public float JumpPower = 20.0f;
-    public float SwimUpSpeed = 5.0f;
-    public float SprintScale = 1.5f;
+    public float MoveSpeed = 3.0f; // speed of the player
+    public float JumpPower = 20.0f; // jump power
+    public float SwimUpSpeed = 5.0f; // swim up speed
+    public float SprintScale = 1.5f; // sprint scale (works in liquids)
+
+    public bool LockMove = false; // lock movement of the object
 
     public override void Update(Game game)
     {
+        if (LockMove)
+        {
+            base.Update(game);
+            return; // if we are locked, don't update
+        }
+
         // calculate a movement vector
         Velocity["movement"] = new Vector2f(0, Math.Max(0, Velocity["movement"].Y)); // reset the movement vector everytime we want to update input
         Vector2f move = new Vector2f(0, 0);

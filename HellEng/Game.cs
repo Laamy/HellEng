@@ -68,30 +68,15 @@ internal class Game : GameEngine
 
         {
             // we've created an air bubble in the water so lets give it some borders
-            //MiniSubObject miniShip = new MiniSubObject()
-            //{
-            //    Position = ocean.Position + new Vector2f(100, 100),
-            //    Tags = new List<string>(new string[] { "mini-ship" }),
-            //    Driver = Instance.Player,
-            //};
+            MiniSubObject miniShip = new MiniSubObject()
+            {
+                Position = ocean.Position + new Vector2f(100, 100),
+                Tags = new List<string>(new string[] { "mini-ship" }),
+                //Driver = Instance.Player,
+            };
 
-            //Instance.Level.Children.Add(miniShip);
+            Instance.Level.Children.Add(miniShip);
         }
-
-        // debug interactable object
-        InteractObject interact = new InteractObject()
-        {
-            Position = new Vector2f(300, 250),
-            Keybind = Keyboard.Key.F,
-            Range = 100,
-        };
-
-        interact.OnInteract += (object sender, EventArgs e) =>
-        {
-            Debug.Log("Interacted with object");
-        };
-
-        Instance.Level.Children.Add(interact);
 
         // cover the boittom half of map as WaterObject
         Instance.Level.Children.Add(ocean);
