@@ -14,6 +14,10 @@ internal class RigidObject : SolidObject
 
     public override void Update(Game game)
     {
+        // check for if rigidy body is past 10k units if so we should stop ticking it
+        if (Position.X > 10000 || Position.Y > 10000)
+            return;
+
         Velocity.Main = new Vector2f(Velocity.Main.X, Velocity.Main.Y + Gravity); // apply gravity to main velocity
 
         bool hasCollided = false; // if the object has collided with anything

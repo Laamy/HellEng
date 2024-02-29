@@ -22,23 +22,23 @@ internal class GameEngine
     private int updateRate = 60;
 
     // sdl stuff
-    public RenderWindow window;
+    public RenderWindow Window;
 
     // check if sdl window is in focus
     public bool IsFocused
     {
-        get => window.HasFocus();
+        get => Window.HasFocus();
     }
 
     public void Start()
     {
         // sdl renderer
         VideoMode mode = new VideoMode(800, 600);
-        window = new RenderWindow(mode, "Game Engine");
-        window.Closed += (s, e) => window.Close();
-        window.Resized += (s, e) => Size = new Vector2u(e.Width, e.Height);
+        Window = new RenderWindow(mode, "Game Engine");
+        Window.Closed += (s, e) => Window.Close();
+        Window.Resized += (s, e) => Size = new Vector2u(e.Width, e.Height);
 
-        window.SetActive();
+        Window.SetActive();
 
         OnLoad(); // load event
 
@@ -66,7 +66,7 @@ internal class GameEngine
         //    }
         //});
 
-        while (window.IsOpen)
+        while (Window.IsOpen)
         {
             // handle draw (165 targetFPS)
             long currTicks = DateTime.UtcNow.Ticks;
@@ -75,7 +75,7 @@ internal class GameEngine
             if (elapsedTicks >= targetTicksPerFrame)
             {
                 prevTicks = currTicks;
-                OnDraw(window); // redraw window
+                OnDraw(Window); // redraw window
             }
 
 
@@ -95,8 +95,8 @@ internal class GameEngine
         OnUnload();
 
         // clean up
-        window.Close();
-        window.Dispose();
+        Window.Close();
+        Window.Dispose();
     }
 
     protected virtual void OnDraw(RenderWindow ctx) { }// draw event
@@ -108,16 +108,16 @@ internal class GameEngine
 
     public Vector2u Size
     {
-        get => window.Size;
+        get => Window.Size;
         set
         {
             View view = new View(new FloatRect(0, 0, value.X, value.Y));
-            window.SetView(view);
+            Window.SetView(view);
         }
     }
 
     public String Title
-    { set => window.SetTitle(value); }
+    { set => Window.SetTitle(value); }
 
     #endregion
 }

@@ -62,6 +62,11 @@ internal class LocalPlayer : RigidObject
             Velocity["movement"] += move;
         }
 
+        // lets adjust the camera2d pos to the player
+        Camera2D camera = (Camera2D)Game.Instance.Level.ByClass<Camera2D>()[0];
+
+        camera.Goto(Position + OffsetPosition);
+
         base.Update(game);
     }
 }

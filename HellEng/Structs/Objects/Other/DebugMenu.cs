@@ -105,8 +105,10 @@ internal class DebugMenu : RawObject
         if (e.Button != Mouse.Button.Left)
             return;
 
-        // store mouse pos to the form
-        Vector2i pos = new Vector2i(e.X, e.Y);
+        Camera2D cam = (Camera2D)Game.Instance.Level.ByClass<Camera2D>()[0];
+
+        // store mouse pos to the form with the camera2d in mind
+        Vector2f pos = new Vector2f(e.X, e.Y).ToCameraSpace(cam);
 
         // window it was called from
         RenderWindow window = (RenderWindow)sender;
@@ -122,6 +124,7 @@ internal class DebugMenu : RawObject
             
             // calculate the bounding box of the object label
             FloatRect rect = new FloatRect(window.Size.X - 200, 0 + FONT_SIZE * Game.Instance.Level.Children.IndexOf(obj), 200, FONT_SIZE);
+
 
             // check if the mouse is inside the bounding box
             if (rect.Contains(pos.X, pos.Y))

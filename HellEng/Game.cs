@@ -109,6 +109,9 @@ internal class Game : GameEngine
         // add the player to the level
         Instance.Level.Children.Add(Instance.Player);
 
+        // add the camera to the level
+        Instance.Level.Children.Add(Instance.Camera);
+
         // we've finished so start the app
         Start();
     }
