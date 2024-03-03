@@ -33,4 +33,11 @@ public class Localization
             return Texts[key]; // return the localized string
         else return key; // return the placeholder for it (the key) which is in english
     }
+
+    public string GetText(string key, string value)
+    {
+        if (Texts.ContainsKey(key))
+            return Texts[key].Replace("{value}", value);
+        else return key;
+    }
 }

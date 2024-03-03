@@ -17,7 +17,7 @@ internal class Game : GameEngine
     protected override void OnLoad()
     {
         // set the window title
-        Title = "HellEngine";
+        Title = Instance.Localization.GetText("game.title");
 
         Instance.Console.LogL("log.init_map");
 

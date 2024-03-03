@@ -250,6 +250,9 @@
     <None Include="Data\Font\Arial.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\Localization\en-us.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Localization\en-uk.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
