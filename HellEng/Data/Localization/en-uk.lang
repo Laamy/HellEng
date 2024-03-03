@@ -4,14 +4,14 @@ game.version=0.1
 game.author=YeemiRouth
 
 # debug messages
-log.init_client=Initialized ClientInstance
-log.init_plrcam=Creating player & camera
+log.init_client=Initialized Client Instance
+log.init_plrcam=Creating player and camera
 log.init_game=Starting game loop
 log.init_map=Creating map objects
 log.init_finish=HellEng finished initializing
 
 # some debug values for debugmenu
-debug.offset=OffsetPosition: {value}
+debug.offset=Offset Position: {value}
 debug.position=Position: {value}
 debug.size=Size: {value}
 debug.rotation=Rotation: {value}
@@ -22,9 +22,9 @@ debug.colour=Colour: {value}
 debug.font=Font: {value}
 debug.velocity=Velocity: {value}
 debug.grounded=Grounded: {value}
-debug.airdrag=AirDrag: {value}
+debug.airdrag=Air Drag: {value}
 debug.collision=Collision: {value}
-debug.inwater=InWater: {value}
-debug.jumppower=JumpPower: {value}
+debug.inwater=In Water: {value}
+debug.jumppower=Jump Power: {value}
 debug.movement=Movement: {value}
 debug.cant_view_self=WARNIGN: Can't view self
