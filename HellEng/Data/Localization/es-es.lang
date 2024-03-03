@@ -1,0 +1,30 @@
+﻿# main game stuff
+game.title=Motor de Depuración (HellEng)
+game.version=0.1
+game.author=YeemiRouth
+
+# mensajes de depuración
+log.init_client=Cliente Inicializado
+log.init_plrcam=Creando jugador y cámara
+log.init_game=Iniciando bucle del juego
+log.init_map=Creando objetos de mapa
+log.init_finish=HellEng terminó la inicialización
+
+# algunos valores de depuración para el menú de depuración
+debug.offset=Posición Desplazada: {value}
+debug.position=Posición: {value}
+debug.size=Tamaño: {value}
+debug.rotation=Rotación: {value}
+debug.gravity=Gravedad: {value}
+debug.movespeed=Velocidad de Movimiento: {value}
+debug.text=Texto: {value}
+debug.colour=Color: {value}
+debug.font=Fuente: {value}
+debug.velocity=Velocidad: {value}
+debug.grounded=En Tierra: {value}
+debug.airdrag=Arrastre de Aire: {value}
+debug.collision=Colisión: {value}
+debug.inwater=En Agua: {value}
+debug.jumppower=Fuerza de Salto: {value}
+debug.movement=Movimiento: {value}
+debug.cant_view_self=ADVERTENCIA: No se puede ver a sí mismo

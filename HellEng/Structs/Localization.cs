@@ -9,7 +9,7 @@ public class Localization
 
     public void Init()
     {
-        SetLanguage("en-uk");
+        SetLanguage("es-es");
     }
 
     public void SetLanguage(string lang)
