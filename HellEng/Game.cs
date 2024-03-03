@@ -6,6 +6,7 @@ using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Management.Instrumentation;
 
 #endregion
 
@@ -17,6 +18,8 @@ internal class Game : GameEngine
     {
         // set the window title
         Title = "HellEngine";
+
+        Instance.Console.LogL("log.init_map");
 
         // simple objects to border the edges of the window off
         Instance.Level.Children.Add(new SolidObject()
@@ -81,36 +84,44 @@ internal class Game : GameEngine
         // cover the boittom half of map as WaterObject
         Instance.Level.Children.Add(ocean);
 
-        // some test rigid objects
-        //for (int x = 0; x < 8; x++)
-        //{
-        //    for (int y = 0; y < 8; y++)
-        //    {
-        //        Instance.Level.children.Add(new RigidObject()
-        //        {
-        //            Position = new Vector2f(100 + (x * 4), 400 - (y * 4)),
-        //            Size = new Vector2f(4, 4),
-        //            Color = new Color((byte)(x * 16), (byte)(y * 16), 255),
-        //        });
-        //    }
-        //}
-
         Size = new Vector2u(800, 600);
 
         // add the debug menu to the scene
         Instance.Level.Children.Add(Instance.DebugMenu);
+
+        Instance.Console.LogL("log.init_finish");
     }
 
     public Game()
     {
-        // some debugging information
-        //Instance.Level.children.Add(Instance.DebugText);
+        // setup Console instance
+        Instance.Console.OnLog += (object sender, ConsoleLog e) =>
+        {
+            ConsoleColor color = e.Color;
+            string data = e.Data;
+
+            System.Console.ForegroundColor = color;
+            System.Console.WriteLine(data);
+        };
+
+        Instance.Console.OnClear += (object sender, EventArgs e) =>
+        {
+            System.Console.Clear();
+        };
+
+        Instance.Localization.Init(); // load localization strings
+
+        Instance.Console.LogL("log.init_client");
+
+        Instance.Console.LogL("log.init_plrcam");
 
         // add the player to the level
         Instance.Level.Children.Add(Instance.Player);
 
         // add the camera to the level
         Instance.Level.Children.Add(Instance.Camera);
+
+        Instance.Console.LogL("log.init_game");
 
         // we've finished so start the app
         Start();

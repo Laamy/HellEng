@@ -2,6 +2,7 @@
 
 using SFML.Graphics;
 using SFML.System;
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -54,5 +55,12 @@ internal class SolidObject : RawObject
     public override void Draw(RenderWindow e)
     {
         Bounds.Draw(e);
+    }
+
+    // this is such a mess
+    internal SolidObject SetFalse(Vector2f vector2f)
+    {
+        Bounds._falseSize = vector2f;
+        return this;
     }
 }

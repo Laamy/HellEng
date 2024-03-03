@@ -11,6 +11,8 @@ class Bounds
     public RectangleShape _rect; // rectangle shape
     Vector2f _transformOffset; // transform offset
 
+    public Vector2f _falseSize;
+
     public FloatRect? _cache; // cached bounds to avoid recalculating when not needed
 
     public Bounds(FloatRect rect)

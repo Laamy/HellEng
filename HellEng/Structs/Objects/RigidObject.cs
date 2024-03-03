@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using System;
 
 internal class RigidObject : SolidObject
 {
@@ -23,7 +24,7 @@ internal class RigidObject : SolidObject
         bool hasCollided = false; // if the object has collided with anything
         bool inLiquid = false; // if the object is in water
 
-        // check if the player is colliding with anything (excluding water as we need to seperately check before we apply friction)
+        // check if the player is colliding with anything
         foreach (RawObject obj in Game.Instance.Level.Children)
         {
             if (obj is LiquidObject)
@@ -40,17 +41,20 @@ internal class RigidObject : SolidObject
 
                     foreach (var clip in liquid.ClippingAreas)
                     {
-                        FloatRect tempBounds = clip.Value.GetGlobalBounds();
-
-                        // offset the tempBounds by the liquid position
-                        tempBounds.Left += liquid.Position.X;
-                        tempBounds.Top += liquid.Position.Y;
+                        FloatRect tempBounds = clip.Value.GetGlobalBounds(); // this will use alot of CPU so i should probably switch to using a bounds
+                        Vector2f _false = clip.Value._falseSize;
 
                         if (Bounds.IsInside(tempBounds))
                             inClipping = true;
                     }
 
-                    if (!inClipping)
+                    if (inClipping)
+                    {
+                        inLiquid = false;
+                        Grounded = false;
+                        hasCollided = false;
+                    }
+                    else
                     {
                         // not in a clipping area so act as we're in liquid
                         inLiquid = true;
@@ -59,12 +63,6 @@ internal class RigidObject : SolidObject
 
                         foreach (string key in Velocity.Keys)
                             Velocity[key] /= 1 + liquid.Friction;
-                    }
-                    else
-                    {
-                        inLiquid = false;
-                        Grounded = false;
-                        hasCollided = false;
                     }
                 }
             }

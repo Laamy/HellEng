@@ -1,0 +1,14 @@
+﻿# main game stuff
+game.name=HellEng
+game.version=0.1
+game.author=YeemiRouth
+
+# debug messages
+log.init_client=Initialized ClientInstance
+log.init_plrcam=Creating player & camera
+log.init_game=Starting game loop
+log.init_finish=HellEng finished initializing
+log.init_map=Creating map objects
+
+# some debug values
+debug.position=Position: {x}, {y}

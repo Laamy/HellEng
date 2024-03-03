@@ -24,28 +24,34 @@ internal class MiniSubObject : GroupObject
             Position = new Vector2f(0, 0),
             Size = new Vector2f(100, 10),
             Color = Color.White,
-        });
+            Parent = this,
+        }.SetFalse(new Vector2f(50, 50)));
 
         Add(Game.Instance.Level, new SolidObject()
         {
             Position = new Vector2f(0, 0),
             Size = new Vector2f(10, 100),
             Color = Color.White,
-        });
+            Parent = this,
+        }.SetFalse(new Vector2f(50, 50)));
 
         Add(Game.Instance.Level, new SolidObject()
         {
             Position = new Vector2f(90, 0),
             Size = new Vector2f(10, 100),
             Color = Color.White,
-        });
+            Parent = this,
+        }.SetFalse(new Vector2f(50, 50)));
 
         Add(Game.Instance.Level, new SolidObject()
         {
             Position = new Vector2f(0, 95),
             Size = new Vector2f(50, 5),
             Color = Color.White,
-        });
+            Parent = this,
+        }.SetFalse(new Vector2f(50, 50)));
+
+        Size = new Vector2f(100, 100);
 
         // debug interactable object
         Interact = new InteractObject()
@@ -56,7 +62,9 @@ internal class MiniSubObject : GroupObject
             OnInteract = (object sender, EventArgs e) =>
             {
                 Interact.Visible = false;
-                Console.WriteLine("Entered minisub controls!");
+
+                // inform the console
+                Game.Instance.Console.Info("Entered minisub controls!");
 
                 // set the driver to the player
                 Driver = Game.Instance.Player;

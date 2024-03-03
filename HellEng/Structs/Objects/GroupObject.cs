@@ -30,6 +30,7 @@ internal class GroupObject : RawObject
     }
 
     private Vector2f _position;
+    private Vector2f _size;
 
     public List<string> Tags;
 
@@ -44,6 +45,16 @@ internal class GroupObject : RawObject
             // offset each object in the group by the global position (position of the group)
             foreach (var child in Children)
                 child.OffsetPosition = value;
+        }
+    }
+
+    public Vector2f Size
+    {
+        get => _size;
+        set
+        {
+            // set the size of the group (this is for collision detection)
+            _size = value;
         }
     }
 

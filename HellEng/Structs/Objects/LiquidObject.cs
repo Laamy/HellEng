@@ -9,8 +9,8 @@ internal class LiquidObject : RawObject
 {
     private ushort prevId = 0; // the last clipping rectangle id used
 
-    public  Dictionary<int, RectangleShape> ClippingAreas { get; set; }
-        = new Dictionary<int, RectangleShape>(); // the clipping areas for the liquid object indexed by id
+    public  Dictionary<int, Bounds> ClippingAreas { get; set; }
+        = new Dictionary<int, Bounds>(); // the clipping areas for the liquid object indexed by id
 
     private RenderTexture renderTexture; // the render texture to draw the liquid object to
     private Sprite sprite; // the sprite used to draw the liquid object textures
@@ -36,7 +36,13 @@ internal class LiquidObject : RawObject
     public Vector2f Position
     {
         get => Bounds.Position;
-        set => Bounds.Position = value;
+        set
+        {
+            Bounds.Position = value;
+
+            foreach (var clip in ClippingAreas)
+                clip.Value.OffsetPosition = value; // update for collisions
+        }
     }
 
     public float Rotation
@@ -65,15 +71,12 @@ internal class LiquidObject : RawObject
 
     public int AddClippingArea(Vector2f position, Vector2f size)
     {
-        // create rectangleshape
-        FloatRect clipRect = new FloatRect(new Vector2f(position.X, position.Y), new Vector2f(size.X, size.Y));
-
         // create new drawable for clipping rectangle
-        RectangleShape clip = new RectangleShape()
+        Bounds clip = new Bounds(new FloatRect(1, 1, size.X, size.Y))
         {
             Position = position,
-            Size = size,
-            FillColor = Color.Transparent,
+            OffsetPosition = Position,
+            Color = Color.Transparent,
         };
 
         ClippingAreas[prevId++] = clip; // add to the clipping areas
@@ -92,12 +95,16 @@ internal class LiquidObject : RawObject
         sprite.Position = Position; // set the position
     }
 
-    private void EraseRegion(RectangleShape area) // this works but no way its fast so TODO: optimzie this
+    private void EraseRegion(Bounds area) // this works but no way its fast so TODO: optimzie this
     {
         if (area == null)
             return;
 
-        renderTexture.Draw(area, new RenderStates(BlendMode.None));
+        area._rect.Position = area.Position;
+        area._rect.Size = area.Size;
+        area._rect.Rotation = area.Rotation;
+
+        renderTexture.Draw(area._rect, new RenderStates(BlendMode.None));
     }
 
     public void Invalidate()
